@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Hostel Manager</title>
+    <style>
+        :root { --pub: #28a745; --pri: #6f42c1; }
+        body { font-family: 'Segoe UI', sans-serif; background: #eef2f3; display: flex; justify-content: center; padding: 20px; }
+        .app-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 550px; }
+        
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 10px; background: #fafafa; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        
+        button { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-main { background: #007bff; color: white; }
+        .btn-order { background: var(--pub); color: white; width: 100%; }
+        .btn-danger { background: #dc3545; color: white; flex: 1; }
+        .btn-download { background: #17a2b8; color: white; flex: 1; }
+        .btn-del { background: transparent; color: #ff4d4d; font-size: 18px; padding: 0 10px; }
+
+        .member-chip { display: inline-block; background: white; padding: 6px 12px; border-radius: 20px; margin: 4px; border: 2px solid #ddd; cursor: pointer; font-size: 14px; }
+        .active-user { border-color: #007bff; background: #e7f3ff; color: #007bff; }
+
+        .order-card { background: white; border: 1px solid #eee; padding: 12px; margin-bottom: 10px; border-left: 6px solid #ccc; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .badge { font-size: 10px; padding: 3px 6px; border-radius: 4px; color: white; text-transform: uppercase; margin-left: 5px; }
+        
+        .summary-box { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>Hostel Manager (Global Public) 🏨</h2>
+
+    <div class="section">
+        <h3>1. Room Occupancy</h3>
+        <div class="input-group">
+            <input type="text" id="nameIn" placeholder="Enter name...">
+            <button class="btn-main" onclick="addMember()">Add to Room</button>
+        </div>
+        <div id="memberList"></div>
+    </div>
+
+    <div class="section">
+        <h3>2. New Request</h3>
+        <p id="contextLabel" style="font-size: 13px; color: #666;">Select a roommate first.</p>
+        <div class="input-group">
+            <input type="text" id="itemIn" placeholder="Item..." disabled>
+            <input type="number" id="priceIn" placeholder="$" style="width: 80px;" disabled>
+        </div>
+        <div class="input-group">
+            <label><input type="radio" name="oType" value="public" checked> Public (Global Hostel Split)</label>
+            <label><input type="radio" name="oType" value="private"> Private (Room Split)</label>
+        </div>
+        <button class="btn-order" id="orderBtn" onclick="addOrder()" disabled>Place Order</button>
+    </div>
+
+    <div class="section">
+        <h3>3. Active Orders</h3>
+        <div id="orderContainer"></div>
+        <div class="summary-box" id="billSummary">No orders yet.</div>
+        
+        <div class="input-group" style="margin-top: 15px;">
+            <button class="btn-download" onclick="downloadReceipt()">📥 Download Receipt</button>
+            <button class="btn-danger" onclick="resetApp()">🗑️ Clear All</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let members = []; 
+    let orders = [];  
+    let currentUser = null;
+    const MAX_PER_ROOM = 5;
+
+    function addMember() {
+        const name = document.getElementById('nameIn').value.trim();
+        if (!name) return;
+        
+        let roomId = Math.ceil((members.length + 1) / MAX_PER_ROOM);
+        members.push({ name, roomId });
+        
+        document.getElementById('nameIn').value = "";
+        renderMembers();
+    }
+
+    function renderMembers() {
+        const div = document.getElementById('memberList');
+        div.innerHTML = "";
+        members.forEach(m => {
+            const chip = document.createElement('div');
+            chip.className = `member-chip ${currentUser?.name === m.name ? 'active-user' : ''}`;
+            chip.innerHTML = `${m.name} <small>(Rm ${m.roomId})</small>`;
+            chip.onclick = () => {
+                currentUser = m;
+                document.getElementById('itemIn').disabled = false;
+                document.getElementById('priceIn').disabled = false;
+                document.getElementById('orderBtn').disabled = false;
+                document.getElementById('contextLabel').innerHTML = `Ordering for <b>Room ${m.roomId}</b> as <b>${m.name}</b>`;
+                renderMembers();
+            };
+            div.appendChild(chip);
+        });
+    }
+
+    function addOrder() {
+        const name = document.getElementById('itemIn').value;
+        const price = parseFloat(document.getElementById('priceIn').value);
+        const type = document.querySelector('input[name="oType"]:checked').value;
+
+        if (!name || !price) return;
+
+        orders.push({
+            id: Date.now(),
+            name, price, type,
+            roomId: currentUser.roomId,
+            requester: currentUser.name,
+            votes: 1
+        });
+
+        document.getElementById('itemIn').value = "";
+        document.getElementById('priceIn').value = "";
+        renderOrders();
+    }
+
+    function renderOrders() {
+        const container = document.getElementById('orderContainer');
+        container.innerHTML = "";
+        
+        orders.forEach(o => {
+            const card = document.createElement('div');
+            card.className = "order-card";
+            card.style.borderLeftColor = o.type === 'public' ? 'var(--pub)' : 'var(--pri)';
+            
+            // LOGIC CHANGE: Determine vote limit based on type
+            let voteLimit = (o.type === 'public') ? members.length : members.filter(m => m.roomId === o.roomId).length;
+
+            card.innerHTML = `
+                <div style="flex-grow:1">
+                    <b>${o.name}</b> ($${o.price}) <span class="badge" style="background:${o.type === 'public'?'var(--pub)':'var(--pri)'}">${o.type}</span>
+                    <div style="font-size:11px; color:#888">${o.type === 'public' ? 'Global Order' : 'Room ' + o.roomId} | By ${o.requester}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px">
+                    <span style="font-weight:bold">${o.votes}/${voteLimit}</span>
+                    <button style="background:#ffc107; padding:4px 8px; border-radius:4px" onclick="vote(${o.id})">👍</button>
+                    <button class="btn-del" onclick="deleteOrder(${o.id})">×</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        updateSummary();
+    }
+
+    function vote(id) {
+        const order = orders.find(o => o.id === id);
+        // LOGIC CHANGE: Limit is total members for public, room capacity for private
+        let limit = (order.type === 'public') ? members.length : members.filter(m => m.roomId === order.roomId).length;
+
+        if (order.votes >= limit) {
+            alert(`⚠️ Capacity reached! Max ${limit} votes allowed for this ${order.type} order.`);
+            return;
+        }
+        order.votes++;
+        renderOrders();
+    }
+
+    function deleteOrder(id) {
+        orders = orders.filter(o => o.id !== id);
+        renderOrders();
+    }
+
+    function updateSummary() {
+        const box = document.getElementById('billSummary');
+        if (orders.length === 0) { box.innerHTML = "No orders yet."; return; }
+
+        let text = "HOSTEL BILL SUMMARY\n====================\n";
+        orders.forEach(o => {
+            // LOGIC CHANGE: Split by total members if public, else by votes
+            let divisor = (o.type === 'public') ? members.length : o.votes;
+            let share = o.price / divisor;
+            let mode = (o.type === 'public') ? `Global Split (${members.length} ppl)` : `Voter Split (${o.votes} ppl)`;
+            
+            text += `${o.type === 'public' ? '[Global]' : '[Rm ' + o.roomId + ']'} ${o.name}: $${share.toFixed(2)} each (${mode})\n`;
+        });
+        box.innerText = text;
+    }
+
+    function downloadReceipt() {
+        const text = document.getElementById('billSummary').innerText;
+        const blob = new Blob([text], { type: 'text/plain' });
+        const anchor = document.createElement('a');
+        anchor.download = 'hostel_receipt.txt';
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.click();
+    }
+
+    function resetApp() {
+        if (confirm("Reset everything?")) {
+            members = []; orders = []; currentUser = null;
+            renderMembers(); renderOrders();
+            document.getElementById('contextLabel').innerText = "Select a roommate first.";
+        }
+    }
+</script>
+</body>
+</html>
