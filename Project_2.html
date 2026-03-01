@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Hero 🔦</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif; 
+            background: #f4f4f9; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+
+        .app-container {
+            background: beige;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        input { 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 16px; 
+        }
+
+        button { 
+            padding: 10px 15px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.2s; 
+        }
+
+        .btn-add { background: #007bff; color: white; width: 100%; }
+        .btn-add:hover { background: #0056b3; }
+
+        /* New Action Buttons */
+        .btn-shuffle { background: #6f42c1; color: white; font-size: 13px; }
+        .btn-clear { background: #dc3545; color: white; font-size: 13px; }
+        .btn-shuffle:hover { background: #5a32a3; }
+        .btn-clear:hover { background: #a71d2a; }
+
+        .deck-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+
+        .flashcard {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            position: relative;
+        }
+
+        .flashcard:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+
+        .card-front { color: #333; }
+        .card-back { 
+            background: #fff3cd; 
+            color: #856404; 
+            border-color: #ffeeba; 
+        }
+
+        .btn-mastered { 
+            position: absolute; 
+            top: 5px; 
+            right: 5px; 
+            background: #d4edda; 
+            color: #155724; 
+            font-size: 10px; 
+            padding: 4px 8px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1>Flashcard Hero 🔦</h1>
+
+        <div class="section">
+            <h3>Create New Cards 🃏</h3>
+            <div class="input-group">
+                <input type="text" id="queInput" placeholder="Question...">
+                <input type="text" id="ansInput" placeholder="Answer...">
+                <button class="btn-add" onclick="savecard()">Add Card 🃏</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Study Deck📚(<span id="cardCount">0</span>)</h3>
+                <div id="deckActions" style="display: none; gap: 5px;">
+                    <button class="btn-shuffle" onclick="shuffleDeck()">🔀 Shuffle</button>
+                    <button class="btn-clear" onclick="clearDeck()">🗑️ Clear All</button>
+                </div>
+            </div>
+            <div id="deckContainer" class="deck-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        let myDeck = JSON.parse(localStorage.getItem('heroDeck')) || [];
+        renderDeck();
+
+        function savecard() {
+            const q = document.getElementById('queInput');
+            const a = document.getElementById('ansInput');
+
+            if(!q.value || !a.value) {
+                alert("Fill both sides!");
+                return; 
+            }
+
+            const newCard = {
+                question: q.value,
+                answer: a.value,
+                flipped: false
+            };
+
+            myDeck.push(newCard);
+            saveToStorage();
+            renderDeck();
+
+            q.value = ""; a.value = "";
+        }
+
+        function renderDeck() {
+            const container = document.getElementById('deckContainer');
+            const countDisplay = document.getElementById('cardCount');
+            const actions = document.getElementById('deckActions');
+            
+            container.innerHTML = "";
+            countDisplay.textContent = myDeck.length;
+
+            // Show actions only if there are cards
+            actions.style.display = myDeck.length > 0 ? "flex" : "none";
+
+            myDeck.forEach((card, index) => {
+                const div = document.createElement('div');
+                div.className = `flashcard ${card.flipped ? 'card-back' : 'card-front'}`;
+
+                div.innerHTML = `
+                    <button class="btn-mastered" onclick="deleteCard(event, ${index})">DELETE ❌</button>
+                    <div>${card.flipped ? card.answer : card.question}</div>
+                `;
+
+                div.onclick = () => {
+                    card.flipped = !card.flipped;
+                    renderDeck();
+                };
+
+                container.appendChild(div);
+            });
+        }
+
+        function deleteCard(event, index) {
+            event.stopPropagation();
+            myDeck.splice(index, 1);
+            saveToStorage();
+            renderDeck();
+        }
+
+        // NEW: Clear Entire Deck
+        function clearDeck() {
+            if (confirm("Delete all flashcards? This cannot be undone! ⚡")) {
+                myDeck = [];
+                saveToStorage();
+                renderDeck();
+            }
+        }
+
+        // NEW: Shuffle Cards
+        function shuffleDeck() {
+            // Fisher-Yates Shuffle Algorithm
+            for (let i = myDeck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [myDeck[i], myDeck[j]] = [myDeck[j], myDeck[i]];
+            }
+            // Reset all flips so we start fresh
+            myDeck.forEach(card => card.flipped = false);
+            renderDeck();
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('heroDeck', JSON.stringify(myDeck));
+        }
+    </script>
+</body>
+</html>
