@@ -1,3 +1,0 @@
-﻿# 10_Projects_Fronted
- <p>Here I upload 10 real world Projects which may help you in Fronted Development Basics.</p>
-
