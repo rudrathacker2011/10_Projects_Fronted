@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker 💸</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="tracker-card">
+        <header>
+            <h1>Expense Tracker</h1>
+
+            <div id="live-clock" class="clock-display">
+                loading date & time...
+            </div>
+        </header>
+
+        <hr>
+        
+        <section class="balnce-view">
+            <h3>Total Expense: $<span id="total-display">0.00</span></h3>
+        </section>
+
+        <section class="input-area">
+            <form id="expense-form">
+                <div class="input-group">
+                    <input type="number" id="amount" placeholder="$ 0.00" step="0.01" required>
+                    <input type="text" id="description" placeholder="What was it for ?" required>
+                    <select id="category">
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Misc">Misc</option>
+                    </select>
+                </div>
+                <button type="submit" id="add-btn">Add Expense</button>
+            </form>
+        </section>
+        
+        <hr>
+        
+        <section class="history-area">
+            <h2>History</h2>
+            <ul id="expense-list">
+            </ul>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
