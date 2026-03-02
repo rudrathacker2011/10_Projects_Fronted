@@ -1,3 +1,4 @@
+// js
 function updateClock() {
     const clockElement = document.getElementById('live-clock');
     const now = new Date();
