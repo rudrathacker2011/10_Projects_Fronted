@@ -1,0 +1,141 @@
+:root {
+    --primary: #6366f1;
+    --danger: #ef4444;
+    --success: #10b981;
+    --text-main: #1f2937;
+    --bg: #f3f4f6;
+}
+
+body { 
+    font-family: 'Inter', system-ui, sans-serif; 
+    background: var(--bg); 
+    color: var(--text-main); 
+    line-height: 1.5; 
+    padding: 2rem; 
+}
+
+.app-container { 
+    max-width: 900px; 
+    margin: 0 auto; 
+}
+
+.main-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 2rem; 
+}
+
+.log-form-card { 
+    background: white; 
+    padding: 1.5rem; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+    margin-bottom: 2rem; 
+}
+
+.form-row { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 1.5rem; 
+}
+
+#user-name { 
+    flex: 1; 
+    padding: 0.75rem; 
+    border: 1px solid #d1d5db; 
+    border-radius: 6px; 
+}
+
+.input-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 1rem; 
+    margin-bottom: 1rem; 
+}
+
+label { 
+    display: block; 
+    font-weight: 600; 
+    font-size: 0.875rem; 
+    margin-bottom: 0.5rem;
+}
+
+textarea { 
+    width: 100%; 
+    padding: 0.75rem; 
+    border: 1px solid #d1d5db; 
+    border-radius: 6px; 
+    min-height: 80px; 
+    font-family: inherit; 
+}
+
+#post-btn { 
+    width: 100%; 
+    padding: 0.75rem; 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    cursor: pointer; 
+}
+
+/* Card Styling */
+.standup-card { 
+    background: white; 
+    padding: 1.5rem; 
+    border-radius: 12px; 
+    margin-bottom: 1rem; 
+    border-left: 6px solid #e5e7eb; 
+    position: relative; }
+.standup-card.has-blocker {
+    border-left-color: var(--danger); 
+}
+
+.card-top { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 1rem; 
+}
+
+.avatar-name { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-weight: 700; 
+    font-size: 1.1rem; 
+}
+
+.status-section { 
+    margin-bottom: 0.75rem; 
+}
+.status-section strong { 
+    color: #6b7280; 
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em; 
+}
+
+.blocker-box { 
+    background: #fee2e2; 
+    color: #991b1b; 
+    padding: 0.75rem; 
+    border-radius: 6px; 
+    margin-top: 0.5rem; 
+}
+
+.secondary-btn { 
+    padding: 0.5rem 1rem; 
+    background: white; 
+    border: 1px solid #d1d5db; 
+    border-radius: 6px; 
+    cursor: pointer; 
+}
+.text-btn { 
+    background: none; 
+    border: none; 
+    color: #ef4444; 
+    cursor: pointer; 
+    font-size: 0.875rem; 
+}

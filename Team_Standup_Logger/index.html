@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Standup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div>
+                <h1>Team Standup Logger👥</h1>
+                <p id="current-date" class="date-text"></p>
+            </div>
+            <button id="copy-report-button" class="secondary-btn">📋 Copy Today's Report</button>
+        </header>
+        <section class="log-from-card">
+            <form id="standup-form">
+                <div class="form-row">
+                    <input type="text" id="user-name" placeholder="Full Name" required>
+                    <select id="user-avatar">
+                        <option value="👨‍💻">Developer</option>
+                        <option value="👩‍🎨">Designer</option>
+                        <option value="📊">Product</option>
+                        <option value="🚀">Lead</option>
+                    </select>
+                </div>
+                <div class="input-grid">
+                    <div class="field">
+                        <label>✅ Yesterday</label>
+                        <textarea id="yesterday" placeholder="what did you finish?" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label>📅 Today</label>
+                        <textarea id="today" placeholder="what are you working on?" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label>⚠️ Blockers</label>
+                        <textarea id="blockers" placeholder="Any obstacles? (or 'None')"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" id="post-btn">Post Update</button>
+            </form>
+        </section>
+
+        <section class="feed-section">
+            <div class="feed-header">
+                <h2>Team Activity Feed</h2>
+                <button id="clear-all" class="text-btn">Clear All</button>
+            </div>
+            <div id="feed-container"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
