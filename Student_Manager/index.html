@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <h1>Student Manager</h1>
+
+        <!-- Form -->
+        <form class = "form">
+
+            <div class = "form-group">
+                <label for="name">Student Name</label>
+                <input id="name" type="text" placeholder="Enter Name" required>
+            </div>
+
+            <div class = "form-group">
+                <label for="rollno">Roll Number</label>
+                <input id="rollno" type="number" min="1" placeholder="Enter Roll No." required>
+            </div>
+
+            <div class = "form-group">
+                <label for="grade">Grade</label>
+                <input id="grade" 
+                type="text" pattern="[A-Z]" maxlength="1" 
+                oninput="this.value=this.value.toUpperCase()" 
+                placeholder="Enter Grade(A-Z)" required>
+            </div>
+
+            <div class = "form-group">
+                <label for="branch">Branch</label>
+                <input id="branch" type="text" placeholder="Enter Branch" required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+        <!-- Stats -->
+    <div class="stats">
+        <div class="card">
+        <h3>Total Students</h3>
+        <p id="totalStudents">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Top Grade (A)</h3>
+        <p id="topGrade">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Low Grade (D/F)</h3>
+        <p id="lowGrade">0</p>
+    </div>
+    </div>
+        <!-- TABLE -->
+         <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll No.</th>
+                    <th>Grade</th>
+                    <th>Branch</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+         </table>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>
