@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADING -->
+  <h1>Fitness Tracker</h1>
+
+  <!-- FORM -->
+  <form class="form">
+    <div class="form-group">
+      <label>Exercise Name</label>
+      <input type="text" id="name" placeholder="Exercise Name" required>
+    </div>
+
+    <div class="form-group">
+      <label>Exercise Duration</label>
+      <input type="number" id="duration" placeholder="Minutes" required>
+    </div>
+
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" id="date" required>
+    </div>
+
+    <div class="form-group">
+      <label>Intensity</label>
+      <select id="intensity">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+
+    <button type="submit">Add Exercise</button>
+  </form>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="cards">
+        <h3>Total Exercise</h3>
+        <p id="totalexercise">0</p>
+      </div>
+      <div class="cards">
+        <h3>Total Duration</h3>
+        <p id="totalduration">0</p>
+      </div>
+      <div class="cards">
+        <h3>Exercise Streak</h3>
+        <p id="totalstreak">0</p>
+      </div>
+    </div>
+
+    <!-- SEARCH + FILTER -->
+    <div class="actions">
+      <div class="search-box">
+        <label>Search</label>
+        <input type="search" id="search-bar" placeholder="Search...">
+      </div>
+
+      <div class="filter-box">
+        <label>Filter</label>
+        <select id="filter">
+          <option value="all">All</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Duration</th>
+          <th>Intensity</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS data here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="export-box">
+    <button id="Export">Export</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
