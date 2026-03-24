@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager 📝</h1>
+
+        <!-- MESSAGE BAR — Error/Success yaha dikhega -->
+        <div id="messageBar" class="message-bar hidden"></div>
+
+        <!-- LOADING SPINNER -->
+        <div id="loader" class="loader hidden">
+            <div class="spinner"></div>
+            <p>Loading tasks...</p>
+        </div>
+
+        <!-- FORM -->
+        <form id="taskForm" class="form">
+            <input type="text" id="title" placeholder="Task title..." required>
+            <textarea id="description" placeholder="Task description..." required></textarea>
+            <div style="display:flex; gap:10px;">
+                <button type="submit" id="submitBtn">Add Task ➕</button>
+                <button type="button" id="cancelEditBtn" class="hidden" onclick="cancelEdit()">❌ Cancel Edit</button>
+            </div>
+        </form>
+
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Tasks</h3>
+                <p id="totalTasks">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <p id="completedTasks">0</p>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <table id="taskTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="taskBody">
+                <!-- Tasks yaha aayenge -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
